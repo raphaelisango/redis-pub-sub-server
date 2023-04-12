@@ -1,12 +1,12 @@
 import { createClient } from "redis";
 
-const redis = createClient();
-redis.on("error", (err) => console.log("Redis Client Error", err));
-await redis.connect();
+const client = createClient();
+client.on("error", (err) => console.log("redis Client Error", err));
+await client.connect();
 
-const aString = await redis.ping(); // 'PONG'
-const aNumber = await redis.hSet("foo", "alfa", "42", "bravo", "23"); // 2
-const aHash = await redis.hGetAll("foo"); // { alfa: '42', bravo: '23' }
+const aString = await client.ping(); // 'PONG'
+const aNumber = await client.hSet("foo", "alfa", "42", "bravo", "23"); // 2
+const aHash = await client.hGetAll("foo"); // { alfa: '42', bravo: '23' }
 
 const listener = (message, channel) => console.log(message, channel);
 await client.subscribe("channel", listener);
