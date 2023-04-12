@@ -1,24 +1,19 @@
-const redis = require("redis");
+import { createClient } from "redis";
 
-// create a Redis client
-const client = redis.createClient();
+const redis = createClient();
+redis.on("error", (err) => console.log("Redis Client Error", err));
+await redis.connect();
 
-// create a Redis client
-//const client = redis.createClient({
-//  host: '127.0.0.1', // Redis server host
-//  port: 6379 // Redis server port
-//});
+const aString = await redis.ping(); // 'PONG'
+const aNumber = await redis.hSet("foo", "alfa", "42", "bravo", "23"); // 2
+const aHash = await redis.hGetAll("foo"); // { alfa: '42', bravo: '23' }
 
-// subscribe to a channel
-client.subscribe("my-channel");
+const listener = (message, channel) => console.log(message, channel);
+await client.subscribe("channel", listener);
+await client.pSubscribe("channe*", listener);
+// Use sSubscribe for sharded Pub/Sub:
+await client.sSubscribe("channel", listener);
 
-// listen for messages on the channel
-client.on("message", function (channel, message) {
-  console.log("Received message:", message);
-});
-
-// publish a message to the channel
-
-setInterval(() => {
-  client.publish("my-channel", "Hello, world!");
-}, 3000);
+await client.publish("channel", "message");
+// Use sPublish for sharded Pub/Sub:
+await client.sPublish("channel", "message");
