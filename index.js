@@ -10,6 +10,5 @@ const aHash = await client.hGetAll("foo"); // { alfa: '42', bravo: '23' }
 
 const listener = (message, channel) => console.log(message, channel);
 await client.subscribe("channel", listener);
-await client.pSubscribe("channe*", listener);
 
 await client.publish("channel", "message");
