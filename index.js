@@ -18,4 +18,7 @@ client.on("message", function (channel, message) {
 });
 
 // publish a message to the channel
-client.publish("my-channel", "Hello, world!");
+
+setInterval(() => {
+  client.publish("my-channel", "Hello, world!");
+}, 3000);
