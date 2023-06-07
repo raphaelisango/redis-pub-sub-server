@@ -9,7 +9,7 @@ const aNumber = await client.hSet("foo", "alfa", "42", "bravo", "23"); // 2
 const aHash = await client.hGetAll("foo"); // { alfa: '42', bravo: '23' }
 
 const listener = (message, channel) => console.log(message, channel);
-await client.subscribe("channel", listener);
+//await client.subscribe("channel", listener);
 await client.pSubscribe("channe*", listener);
 // Use sSubscribe for sharded Pub/Sub:
 //await client.sSubscribe("channel", listener);
