@@ -12,4 +12,4 @@ const listener = (message, channel) => console.log(message, channel);
 await client.subscribe("channel", listener);
 await client.pSubscribe("channe*", listener);
 // Use sSubscribe for sharded Pub/Sub:
-await client.sSubscribe("channel", listener);
+//await client.sSubscribe("channel", listener);
