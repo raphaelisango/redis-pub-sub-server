@@ -1,74 +1,55 @@
-class RedisPublisher {
-  constructor(createClient) {
-    this.publisher = createClient();
+import { createClient } from "redis";
+
+class RedisClient {
+  constructor() {
+    this.client = createClient();
+    this.client.on("error", (err) => console.log("redis Client Error", err));
+  }
+
+  async connect() {
+    await this.client.connect();
+  }
+
+  async ping() {
+    return await this.client.ping();
+  }
+
+  async hSet(...args) {
+    return await this.client.hSet(...args);
+  }
+
+  async hGetAll(key) {
+    return await this.client.hGetAll(key);
   }
 
   async publish(channel, message) {
-    await this.publisher.connect();
-    this.publisher.publish(channel, message, (error, count) => {
-      if (error) {
-        console.error("Error:", error);
-      } else {
-        console.log(`Message published to ${count} subscribers`);
-      }
-    });
+    return await this.client.publish(channel, message);
   }
 
   quit() {
-    this.publisher.quit();
+    this.client.quit();
   }
 }
 
-class RedisSubscriber {
-  constructor(createClient) {
-    this.subscriber = createClient();
-  }
-
-  subscribe(channel) {
-    this.subscriber.subscribe(channel);
-  }
-  psubscriber(channel) {
-    this.subscriber.pSubscribe(channel);
-  }
-
-  onMessage(callback) {
-    this.subscriber.on("message", callback);
-  }
-
-  quit() {
-    this.subscriber.quit();
-  }
-}
-
-export default function Redis_PubSub(method, createClient) {
-  if (method == "subscriber") {
-    return new RedisSubscriber(createClient);
-  } else if (method == "publisher") {
-    return new RedisPublisher(createClient);
-  } else {
-    console.error("Invalid method >> " + method);
-  }
-}
-
-/*
 // Example usage:
+(async () => {
+  const client = new RedisClient();
+  await client.connect();
 
-import { createClient } from "redis";
-import Redis_PubSub  from "redis";
+  try {
+    const aString = await client.ping();
+    console.log(aString); // 'PONG'
 
-const publisher = new Redis_PubSub("publisher",createClient);
-const subscriber = new Redis_PubSub("subscriber",createClient);
+    const aNumber = await client.hSet("foo", "alfa", "42", "bravo", "23");
+    console.log(aNumber); // 2
 
-const channel = "my-channel";
+    const aHash = await client.hGetAll("foo");
+    console.log(aHash); // { alfa: '42', bravo: '23' }
 
-subscriber.subscribe(channel);
-subscriber.onMessage((channel, message) => {
-  console.log(`Received message from ${channel}: ${message}`);
-});
-
-publisher.publish(channel, "Hello, subscribers!");
-
-publisher.quit();
-subscriber.quit();
-
-*/
+    await client.publish("channel", "message");
+  } catch (error) {
+    console.error("Error:", error);
+  } finally {
+    client.quit();
+  }
+})();

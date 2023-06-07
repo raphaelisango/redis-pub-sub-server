@@ -11,7 +11,6 @@ const aHash = await client.hGetAll("foo"); // { alfa: '42', bravo: '23' }
 //const listener = (message, channel) => console.log(message, channel);
 
 // Use sPublish for sharded Pub/Sub:
-await setInterval(() => {
-  client.publish("channel", "message");
-  //client.sPublish("channel", "message");
-}, 3000);
+
+await client.publish("channel", "message");
+//client.sPublish("channel", "message");
