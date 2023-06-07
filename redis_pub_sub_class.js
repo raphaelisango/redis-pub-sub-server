@@ -26,6 +26,9 @@ class RedisSubscriber {
   subscribe(channel) {
     this.subscriber.subscribe(channel);
   }
+  psubscriber(channel) {
+    this.subscriber.pSubscribe(channel);
+  }
 
   onMessage(callback) {
     this.subscriber.on("message", callback);
