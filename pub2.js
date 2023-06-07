@@ -14,4 +14,4 @@ const aHash = await client.hGetAll("foo"); // { alfa: '42', bravo: '23' }
 await setInterval(() => {
   client.publish("channel", "message");
   client.sPublish("channel", "message");
-}, interval);
+}, 3000);
