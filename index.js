@@ -1,4 +1,26 @@
+// Example usage:
+
 import { createClient } from "redis";
+import Redis_PubSub from "./redis_pub_sub_class.js";
+
+const publisher = new Redis_PubSub("publisher", createClient);
+const subscriber = new Redis_PubSub("subscriber", createClient);
+
+const channel = "my-channel";
+
+subscriber.subscribe(channel);
+subscriber.onMessage((channel, message) => {
+  console.log(`Received message from ${channel}: ${message}`);
+});
+
+setInterval(() => {
+  publisher.publish(channel, "Hello, subscribers!");
+}, 3000);
+
+//publisher.quit();
+//subscriber.quit();
+
+/**import { createClient } from "redis";
 
 const client = createClient();
 client.on("error", (err) => console.log("redis Client Error", err));
@@ -8,5 +30,12 @@ const aString = await client.ping(); // 'PONG'
 const aNumber = await client.hSet("foo", "alfa", "42", "bravo", "23"); // 2
 const aHash = await client.hGetAll("foo"); // { alfa: '42', bravo: '23' }
 
-console.log(aString);
-console.log(aHash);
+const listener = (message, channel) => console.log(message, channel);
+await client.subscribe("channel", listener);
+await client.pSubscribe("channe*", listener);
+// Use sSubscribe for sharded Pub/Sub:
+await client.sSubscribe("channel", listener);
+
+await client.publish("channel", "message");
+// Use sPublish for sharded Pub/Sub:
+await client.sPublish("channel", "message");*/
