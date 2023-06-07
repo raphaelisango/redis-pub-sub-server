@@ -1,12 +1,10 @@
 import { createClient } from "redis";
+import Redis_PubSub from "./redis_pub_sub_class.js";
 
-// Create a Redis client
-const publisher = createClient();
+const publisher = new Redis_PubSub("publisher", createClient);
 
-// Publish a message to a channel
 const channel = "my-channel";
-const message = "Hello, subscribers!";
-publisher(channel, message);
 
-// Close the Redis client when done
-//publisher.quit();
+setInterval(() => {
+  publisher.publish(channel, "Hello, subscribers!");
+}, 3000);

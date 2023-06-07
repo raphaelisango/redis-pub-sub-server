@@ -1,18 +1,16 @@
 import { createClient } from "redis";
+import Redis_PubSub from "./redis_pub_sub_class.js";
 
-// Create a Redis client
-const subscriber = createClient();
+const publisher = new Redis_PubSub("publisher", createClient);
+const subscriber = new Redis_PubSub("subscriber", createClient);
 
-// Subscribe to a channel
 const channel = "my-channel";
-subscriber.subscribe(channel);
 
-// Handle incoming messages
+subscriber.subscribe(channel);
 subscriber.onMessage((channel, message) => {
   console.log(`Received message from ${channel}: ${message}`);
 });
 
-// Close the Redis client when done
-// Note: Subscribers typically remain active and listen for messages indefinitely
-// You can close the subscriber when it's no longer needed
-//subscriber.quit();
+setInterval(() => {
+  publisher.publish(channel, "Hello, subscribers!");
+}, 3000);
