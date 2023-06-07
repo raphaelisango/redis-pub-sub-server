@@ -3,7 +3,8 @@ class RedisPublisher {
     this.publisher = createClient();
   }
 
-  publish(channel, message) {
+  async publish(channel, message) {
+    await this.publisher.connect();
     this.publisher.publish(channel, message, (error, count) => {
       if (error) {
         console.error("Error:", error);
