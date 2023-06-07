@@ -48,14 +48,14 @@ class RedisClient {
     const aString = await client.ping();
     console.log(aString); // 'PONG'
 
-    const aNumber = await client.hSet("foo", "alfa", "42", "bravo", "23");
-    console.log(aNumber); // 2
+    // const aNumber = await client.hSet("foo", "alfa", "42", "bravo", "23");
+    // console.log(aNumber); // 2
 
-    const aHash = await client.hGetAll("foo");
-    console.log(aHash); // { alfa: '42', bravo: '23' }
+    //const aHash = await client.hGetAll("foo");
+    //console.log(aHash); // { alfa: '42', bravo: '23' }
 
     const listener = (message, channel) => console.log(message, channel);
-    //await client.subscribe("channel", listener);
+    await client.subscribe("channel", listener);
     await client.pSubscribe("channe*", listener);
     // Use sSubscribe for sharded Pub/Sub:
     //await client.sSubscribe("channel", listener);

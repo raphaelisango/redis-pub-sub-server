@@ -40,16 +40,18 @@ class RedisClient {
     const aString = await client.ping();
     console.log(aString); // 'PONG'
 
-    const aNumber = await client.hSet("foo", "alfa", "42", "bravo", "23");
-    console.log(aNumber); // 2
+    //const aNumber = await client.hSet("foo", "alfa", "42", "bravo", "23");
+    //console.log(aNumber); // 2
 
-    const aHash = await client.hGetAll("foo");
-    console.log(aHash); // { alfa: '42', bravo: '23' }
+    //const aHash = await client.hGetAll("foo");
+    //  console.log(aHash); // { alfa: '42', bravo: '23' }
 
-    await client.publish("channel", "message");
+    await setInterval(() => {
+      client.publish("channel", "message");
+    }, 3000);
   } catch (error) {
     console.error("Error:", error);
   } finally {
-    client.quit();
+    // client.quit();
   }
 })();
