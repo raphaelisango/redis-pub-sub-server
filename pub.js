@@ -1,5 +1,5 @@
 import { createClient } from "redis";
-import Redis_PubSub from "./redis_pub_sub_class.js";
+import Redis_PubSub from "./redis_pub_class.js";
 
 const publisher = Redis_PubSub("publisher", createClient);
 

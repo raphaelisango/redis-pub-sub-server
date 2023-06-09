@@ -1,8 +1,6 @@
-import { createClient } from "redis";
-
-class RedisClient {
-  constructor() {
-    this.client = createClient();
+export default class RedisPUB {
+  constructor(createclient) {
+    this.client = createclient();
     this.client.on("error", (err) => console.log("redis Client Error", err));
   }
 
@@ -32,10 +30,12 @@ class RedisClient {
 }
 
 // Example usage:
+/** 
+ import { createClient } from "redis";
 (async () => {
-  const client = new RedisClient();
+  const client = new RedisPUB(createClient);
   await client.connect();
-
+ 
   try {
     const aString = await client.ping();
     console.log(aString); // 'PONG'
@@ -55,3 +55,4 @@ class RedisClient {
     // client.quit();
   }
 })();
+*/

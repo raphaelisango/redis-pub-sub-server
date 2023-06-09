@@ -1,41 +1,26 @@
-// Example usage:
+import RedisPUB from "./redis_pub_class.js";
+import RedisSUB from "./redis_sub_class.js";
 
-import { createClient } from "redis";
-import Redis_PubSub from "./redis_pub_sub_class.js";
+function REDIS_PUBSUB(type, createclient) {
+  switch (type) {
+    case "pub":
+      return new RedisPUB(createclient);
 
-const publisher = new Redis_PubSub("publisher", createClient);
-const subscriber = new Redis_PubSub("subscriber", createClient);
+    case "sub":
+      return new RedisSUB(createclient);
 
-const channel = "my-channel";
+    default:
+      console.error("invalid argument");
+      break;
+  }
+}
 
-subscriber.subscribe(channel);
-subscriber.onMessage((channel, message) => {
-  console.log(`Received message from ${channel}: ${message}`);
-});
+export default REDIS_PUBSUB;
+/** 
+ import { createClient } from "redis";
+ import REDIS_PUBSUB  from ".";
 
-setInterval(() => {
-  publisher.publish(channel, "Hello, subscribers!");
-}, 3000);
-
-//publisher.quit();
-//subscriber.quit();
-
-/**import { createClient } from "redis";
-
-const client = createClient();
-client.on("error", (err) => console.log("redis Client Error", err));
-await client.connect();
-
-const aString = await client.ping(); // 'PONG'
-const aNumber = await client.hSet("foo", "alfa", "42", "bravo", "23"); // 2
-const aHash = await client.hGetAll("foo"); // { alfa: '42', bravo: '23' }
-
-const listener = (message, channel) => console.log(message, channel);
-await client.subscribe("channel", listener);
-await client.pSubscribe("channe*", listener);
-// Use sSubscribe for sharded Pub/Sub:
-await client.sSubscribe("channel", listener);
-
-await client.publish("channel", "message");
-// Use sPublish for sharded Pub/Sub:
-await client.sPublish("channel", "message");*/
+(async () => {
+  const client = REDIS_PUBSUB("PUB",createClient);
+  await client.connect();
+*/
