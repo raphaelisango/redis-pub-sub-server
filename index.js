@@ -21,6 +21,16 @@ export default REDIS_PUBSUB;
  import REDIS_PUBSUB  from ".";
 
 (async () => {
-  const client = REDIS_PUBSUB("PUB",createClient);
-  await client.connect();
+  const pub = REDIS_PUBSUB("pub",createClient);
+  await pub.connect();
+  await pub.publish(channel, message);
+
+  const sub = REDIS_PUBSUB("sub",createClient);
+  await sub.connect();
+   const listener = (message, channel) => console.log(message, channel);
+    await sub.subscribe("channel", listener);
+    await sub.pSubscribe("channe*", listener);
+
+
+})();
 */
